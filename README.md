@@ -10,7 +10,7 @@ that would be an invitation for abuse!
 ## Using the images
 
 * edit conf.sh to your needs
-* call ./unpack to unpack the compressed and splitted image into runnable qcow
+* call ./image-unpack to unpack the compressed and splitted image into runnable qcow
 * call ./run-builder to start up the VM
 * call ./ssh-builder to call into the already running VM
 
@@ -19,7 +19,7 @@ that would be an invitation for abuse!
 Since there's no practical fully automatic install, we need to do a somewhat
 manual install from the ISO image and edit a bunch of configs.
 
-* full installation from ISO image
+* full installation from ISO image via ./run-installer
 * * https://cdn.netbsd.org/pub/NetBSD/NetBSD-10.1/images/NetBSD-10.1-amd64.iso
 * * enable sshd
 * * empty root password
@@ -41,3 +41,4 @@ manual install from the ISO image and edit a bunch of configs.
 * * pkgin install git
 * enable serial boot console: /boot.cfg
 * * consdev=com0,115200
+* pack the image via ./image-pack
