@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+split_image() {
+    mkdir -p $1/parts
+    zstd -c --fast $1/disk.img.new | split -d -b 64M - $1/parts/part.
+}
+
+split_image netbsd/10.0/pristine-live
