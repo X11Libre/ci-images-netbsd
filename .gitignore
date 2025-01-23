@@ -2,4 +2,4 @@ disk.img
 disk.img.*
 *.iso
 *.tmp
-disk.qcow2
+*.qcow2

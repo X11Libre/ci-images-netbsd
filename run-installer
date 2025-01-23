@@ -19,7 +19,7 @@ fi
 
 echo "Using installer ISO: $INSTALL_ISO -- $VM_QEMU_ARCH"
 
-IMAGE=$VM_OS_TYPE/$VM_OS_RELEASE/$VM_TEMPLATE/disk-new.qcow2
+IMAGE=$VM_OS_TYPE/$VM_OS_RELEASE-$VM_OS_ARCH/$VM_TEMPLATE/disk-new.qcow2
 
 if [ ! -f "$IMAGE" ]; then
     qemu-img create -f qcow2 "$IMAGE" 32G
