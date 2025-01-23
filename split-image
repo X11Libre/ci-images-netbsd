@@ -9,4 +9,4 @@ split_image() {
     zstd -c --fast $1/disk-new.qcow2 | split -d -b 64M - $1/parts/part.
 }
 
-split_image $VM_OS_TYPE/$VM_OS_RELEASE/$VM_TEMPLATE
+split_image $VM_OS_TYPE/$VM_OS_RELEASE-$VM_OS_ARCH/$VM_TEMPLATE
