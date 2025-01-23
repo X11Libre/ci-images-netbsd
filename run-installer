@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+
+. ./common.sh
+
+INSTALL_URL="https://cdn.netbsd.org/pub/NetBSD/NetBSD-$VM_OS_RELEASE/images/NetBSD-$VM_OS_RELEASE-$VM_OS_ARCH.iso"
+INSTALL_ISO="$VM_OS_TYPE/$VM_OS_RELEASE-$VM_OS_ARCH/installer-iso/cdrom.iso"
+
+rm -f $INSTALL_ISO.tmp
+
+mkdir -p `dirname "$INSTALL_ISO"`
+
+if [ ! -f $INSTALL_ISO ]; then
+    if wget "$INSTALL_URL" -O $INSTALL_ISO.tmp; then
+        mv $INSTALL_ISO.tmp $INSTALL_ISO
+    fi
+fi
+
+echo "Using installer ISO: $INSTALL_ISO -- $VM_QEMU_ARCH"
+
+IMAGE=$VM_OS_TYPE/$VM_OS_RELEASE/$VM_TEMPLATE/disk-new.qcow2
+
+if [ ! -f "$IMAGE" ]; then
+    qemu-img create -f qcow2 "$IMAGE" 32G
+fi
+
+qemu-system-$VM_QEMU_ARCH \
+    -name netbsd-current \
+    -smp 2 \
+    -m 3072 \
+    -hda $IMAGE \
+    -enable-kvm \
+    -machine q35 \
+    -cpu max \
+    -vga virtio \
+    -display gtk,gl=on \
+    -audiodev id=pa,driver=pa \
+    -device ich9-intel-hda \
+    -device hda-micro,audiodev=pa \
+    -usb \
+    -device usb-tablet \
+    -k de_de \
+    -nic user,model=virtio-net-pci,hostfwd=tcp::$VM_SSH_PORT-:22 \
+    -bios /usr/share/ovmf/OVMF.fd \
+    -cdrom "$INSTALL_ISO" \
+    -boot once=cd

@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+
+. ./conf.sh
+
+[ "$VM_NAME" ]       || export VM_NAME=netbsd-current
+
+export VM_MEMSIZE=4064
+export VM_CORES=2
+export VM_QEMU_ARCH=x86_64
+
+export VM_DISK_IMAGE=$VM_OS_TYPE/$VM_OS_RELEASE-$VM_OS_ARCH/$VM_TEMPLATE/disk.qcow2
+
+if [ ! -f $VM_DISK_IMAGE ]; then
+    ./unpack
+fi
+
+#    \ #-vga virtio \
+#    \ #-display gtk,gl=on \
+
+qemu-system-$VM_QEMU_ARCH \
+    -nographic -serial mon:stdio \
+    -name "$VM_NAME" \
+    -smp "$VM_CORES" \
+    -m "$VM_MEMSIZE" \
+    -hda $VM_DISK_IMAGE\
+    -enable-kvm \
+    -machine q35 \
+    -cpu max \
+    -audiodev id=pa,driver=pa \
+    -device ich9-intel-hda \
+    -device hda-micro,audiodev=pa \
+    -usb \
+    -device usb-tablet \
+    -k de_de \
+    -nic user,model=virtio-net-pci,hostfwd=tcp::$BUILDER_SSH_PORT-:22 \
+    -bios /usr/share/ovmf/OVMF.fd \

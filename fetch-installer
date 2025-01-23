@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e
+
+. ./conf.sh
+
+INSTALL_URL="https://cdn.netbsd.org/pub/NetBSD/NetBSD-$VM_OS_RELEASE/images/NetBSD-$VM_OS_RELEASE-$VM_OS_ARCH.iso"
+INSTALL_ISO="$VM_OS_TYPE/$VM_OS_RELEASE-$VM_OS_ARCH/installer-iso/cdrom.iso"
+
+rm -f $INSTALL_ISO.tmp
+
+mkdir -p `dirname "$INSTALL_ISO"`
+
+if [ ! -f $INSTALL_ISO ]; then
+    if wget "$INSTALL_URL" -O $INSTALL_ISO.tmp; then
+        mv $INSTALL_ISO.tmp $INSTALL_ISO
+    fi
+fi

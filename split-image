@@ -1,10 +1,12 @@
 #!/bin/sh
 
+. ./common.sh
+
 set -e
 
 split_image() {
     mkdir -p $1/parts
-    zstd -c --fast $1/disk.img.new | split -d -b 64M - $1/parts/part.
+    zstd -c --fast $1/disk-new.qcow2 | split -d -b 64M - $1/parts/part.
 }
 
-split_image netbsd/10.0/pristine-live
+split_image $VM_OS_TYPE/$VM_OS_RELEASE/$VM_TEMPLATE

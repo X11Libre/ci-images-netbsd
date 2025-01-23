@@ -2,15 +2,17 @@
 
 set -e
 
+. ./conf.sh
+
 makelist() {
     ( for i in $* ; do echo "$i" ; done ) | sort -u
 }
 
 image_unpack() {
     makelist "$1/parts/*"
-    cat `makelist $1/parts/part.*` > $1/disk.img.zst
-    zstd -d $1/disk.img.zst
-    rm -f $1/disk.img.zst
+    cat `makelist $1/parts/part.*` > $1/disk.qcow2.zst
+    zstd -d $1/disk.qcow2.zst
+    rm -f $1/disk.qcow2.zst
 }
 
-image_unpack "netbsd/10.0/pristine-live"
+image_unpack "$VM_OS_TYPE/$VM_OS_RELEASE-$VM_OS_ARCH/$VM_TEMPLATE"

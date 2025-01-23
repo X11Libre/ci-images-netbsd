@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+. ./conf.sh
+
+if [ "$1" ]; then
+    ssh -p $BUILDER_SSH_PORT root@localhost -C "$@"
+else
+    ssh -p $BUILDER_SSH_PORT root@localhost
+fi
